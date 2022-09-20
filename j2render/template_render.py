@@ -6,13 +6,10 @@ from j2render import log_manager
 
 logger = log_manager.get_logger(__name__)
 
-def render(output_file):
+def render(data_dirs, template_dirs, output_file):
     try:        
-        template_dirs = ["sample/templates"]
-        data_dirs = ["sample/data"]
 
-
-        templateLoader = jinja2.FileSystemLoader(template_dirs)
+        templateLoader = jinja2.FileSystemLoader(template_dirs[0])
         templateEnv = jinja2.Environment(loader=templateLoader)
         TEMPLATE_FILE = "main.j2"
         template = templateEnv.get_template(TEMPLATE_FILE)
@@ -32,9 +29,7 @@ def render(output_file):
                 
         outputText = template.render(model = model)  # this is where to put args to the template renderer
 
-        print(outputText)
-
-        with open(output_file, "w") as f:
-            f.write(outputText)     
+        logger.info(f"Render: {outputText}")
+    
     except:
         logger.exception("ERROR ")   

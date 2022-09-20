@@ -5,13 +5,9 @@ import logging
 from .version import __version__
 
 from . import cmd_render
-from . import command2
+from .to_remove import command2
 from .config import ConfigManager
 from . import log_manager
-
-from .other_commands import command3
-from . import cmd_json, cmd_xml, cmd_yaml, cmd_csv
-
 
 @click.group()
 @click.version_option(__version__)
