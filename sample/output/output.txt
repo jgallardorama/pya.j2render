@@ -1,8 +1,0 @@
-My template
-hola = df hola |dfsd
-adios = df adios |dfsd
-como estas = df como estas |dfsd
-adios = df adios |dfsd
-como estas = df como estas |dfsd
-bien y tu = df bien y tu |dfsd
-adios = df adios |dfsd
