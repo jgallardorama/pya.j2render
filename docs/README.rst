@@ -1,0 +1,25 @@
+j2render
+======
+
+
+Python Boilerplate contains all the boilerplate you need to create a Python package.
+
+Usage
+-----
+
+Installation
+------------
+
+Requirements
+^^^^^^^^^^^^
+
+Compatibility
+-------------
+
+Licence
+-------
+
+Authors
+-------
+
+`j2render` was written by `JGR <jgr@jgr.es>`_.
