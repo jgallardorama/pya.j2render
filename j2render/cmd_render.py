@@ -30,6 +30,7 @@ def command():
     
     template_render.render(data_dirs, template_dirs, output_dir)
 
+    
 
 
     # try:

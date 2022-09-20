@@ -1,6 +1,0 @@
-The file test_sample.py contains:
-# Sample Test passing with nose and pytest
-
-def test_pass():
-    assert True, "dummy sample test"
-

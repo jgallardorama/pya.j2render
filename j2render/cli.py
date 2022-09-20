@@ -5,7 +5,6 @@ import logging
 from .version import __version__
 
 from . import cmd_render
-from .to_remove import command2
 from .config import ConfigManager
 from . import log_manager
 

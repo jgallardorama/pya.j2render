@@ -1,5 +1,6 @@
 My template
 {% set items = model["myfile"] -%}
-{% for item in items -%}
-    {{item}} = df {{ item}} |dfsd
+{% for item in items %}
+    {{item}}: {{ j2r_generate(context, item, "component.js.j2", "components/" + item + ".js") }}
+    {{item}}: {{ j2r_generate(context, item, "component.css.j2", "components/" + item + "-module.css") }}
 {% endfor %}
