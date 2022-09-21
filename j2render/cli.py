@@ -5,8 +5,8 @@ import logging
 from .version import __version__
 
 from . import cmd_render
-from .config import ConfigManager
-from . import log_manager
+from .app.config import ConfigManager
+from .app import log_manager
 
 @click.group()
 @click.version_option(__version__)
@@ -32,13 +32,6 @@ def main_command(
 
 
 main_command.add_command(cmd_render.command)
-# main_command.add_command(command2.command)
-# main_command.add_command(command3.command)
-# main_command.add_command(cmd_xml.command)
-# main_command.add_command(cmd_yaml.command)
-# main_command.add_command(cmd_json.command)
-# main_command.add_command(cmd_csv.command)
-
 
 def start():
     main_command()

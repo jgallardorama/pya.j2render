@@ -1,4 +1,4 @@
-from .singleton import SingletonMeta
+from ..cross.singleton import SingletonMeta
 import yaml
 
 

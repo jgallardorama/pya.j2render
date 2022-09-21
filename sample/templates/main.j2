@@ -1,6 +1,16 @@
 My template
-{% set items = model["myfile"] -%}
+
+{#
+# {% set items = model["myfile"] -%}
+# {% for item in items %}
+#     {{item}}: {{ j2r_generate(context, item, "component.js.j2", "components/" + item + ".js") }}
+#     {{item}}: {{ j2r_generate(context, item, "component.css.j2", "components/" + item + "-module.css") }}
+# {% endfor %}
+#}
+
+
+{% set items = model["myfile1"]["components"] -%}
 {% for item in items %}
-    {{item}}: {{ j2r_generate(context, item, "component.js.j2", "components/" + item + ".js") }}
-    {{item}}: {{ j2r_generate(context, item, "component.css.j2", "components/" + item + "-module.css") }}
+    {{item}}: {{ j2r_generate(context, item["name"], "component.js.j2", "components/" + item["name"] + ".js") }}
+    {{item}}: {{ j2r_generate(context, item["name"], "component.css.j2", "components/" + item["name"] + "-module.css") }}
 {% endfor %}

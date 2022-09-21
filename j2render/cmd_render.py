@@ -1,11 +1,11 @@
 import os
 import click
-from . import log_manager
+from .app import log_manager
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, LoggingEventHandler
 import time
 import jinja2
-from . import template_render 
+from .core import template_render 
 
 logger = log_manager.get_logger(__name__)
 
@@ -18,19 +18,21 @@ class MyEventHandler(FileSystemEventHandler):
 
         
 @click.command(name="render")
+@click.option("--var-file", multiple=True)
+@click.option("--var", multiple=True)
+@click.option("--template-dir")
 def command():
 
     logger.debug("Running Command Render")
-    
-    solution_dir = "sample"
-    
-    data_dirs = ["sample/data"]
+        
+    var_file_dirs = ["sample/data"]
     output_dir = "sample/output"
-    template_dirs = ["sample/template"]
+    template_dir = "sample/template"
+    solution = template_render.Solution(output_dir, template_dir, var_file_dirs)
     
-    template_render.render(data_dirs, template_dirs, output_dir)
+    template_render.render(solution)
 
-    
+
 
 
     # try:

@@ -1,0 +1,14 @@
+components:
+  - name: Mycomponent1
+    type: mytype
+  - name: Mycomponent2
+    type: mytype
+  - name: Mycomponent3
+    type: mytype
+  - name: Mycomponent4
+    type: mytype
+  - name: Mycomponent5
+    type: mytype
+  - name: Mycomponent6
+    type: mytype
+    
