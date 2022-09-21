@@ -11,7 +11,12 @@
             "module": "j2render",
             "cwd": "${workspaceFolder}",
             "args": [
-                "gendoc"
+                "render",
+                "--solution-dir",
+                "lab/app",
+                "--output",
+                "lab/output",
+                "--watch"
             ]
         }
     ]
