@@ -3,7 +3,7 @@ import click
 
 from j2render import watcher
 from .app import applogging
-from .core import model_loader,template_render 
+from .core import model_loader, template_render 
 
 logger = applogging.LogManager().get_app_logger()
 

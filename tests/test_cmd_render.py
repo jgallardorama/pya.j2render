@@ -27,8 +27,8 @@ class CmdRenderTestSuite(BaseTestSuite):
                 "sample",
                 "--output", 
                 "output",
-                "--var-file-dir", "sample/model",
-                "--template-dir", "sample/templates"                
+                "--var-file-dir", "sample/data",
+                "--template-dir", "sample/templates"
                 ]
 
         result = runner.invoke(cli.main_command, args)

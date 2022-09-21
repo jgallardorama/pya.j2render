@@ -11,10 +11,10 @@ from j2render.core.model_loader import load_model
 class TestRender(unittest.TestCase):
 
     def test_render(self):
-        var_file_dirs = ["sample/model"]
-        output_dir = "sample/output"
-        solution_dir = "sample"
-        template_dir = "sample/templates"
+        solution_dir = "tests/data/sample01"
+        var_file_dirs = [f"{solution_dir}/data"]
+        output_dir = "output"
+        template_dir = f"{solution_dir}/templates"
         
         shutil.rmtree(output_dir, ignore_errors=True)
         solution = template_render.Solution(solution_dir, output_dir, template_dir, var_file_dirs)        
