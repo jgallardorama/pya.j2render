@@ -1,10 +1,9 @@
 import os
 import click
+
+from j2render import watcher
 from .app import applogging
-from .core import model_loader
-
-
-from .core import template_render 
+from .core import model_loader,template_render 
 
 logger = applogging.LogManager().get_app_logger()
 
@@ -27,11 +26,13 @@ def command(solution_dir,
             clean,
             watch):
     logger.debug("Running Command Render")
-
     solution = template_render.Solution(solution_dir, output_dir, template_dir, var_file_dirs)
     
-    model = model_loader.load_model(solution)
-    template_render.render(solution, model)
+    if watch:
+        watcher.watch_solution(solution)
+    else:         
+        model = model_loader.load_model(solution)
+        template_render.render(solution, model)
 
 
 

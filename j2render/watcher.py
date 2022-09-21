@@ -5,7 +5,7 @@ import threading
 
 from j2render.app.applogging import LogManager
 from j2render.core.template_render import Solution
-
+from j2render.core import model_loader, template_render 
 
 class RenderEventHander(FileSystemEventHandler):
 
@@ -43,7 +43,8 @@ class RenderEventHander(FileSystemEventHandler):
 
 def on_watch_task(solution: Solution):
     logger = LogManager().get_app_logger()
-
+    model = model_loader.load_model(solution)
+    template_render.render(solution, model)
 
 def watch_solution(solution: Solution):
     logger = LogManager().get_app_logger()
