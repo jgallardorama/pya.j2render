@@ -18,21 +18,20 @@ class MyEventHandler(FileSystemEventHandler):
 
         
 @click.command(name="render")
-@click.option("--var-file", multiple=True)
-@click.option("--var", multiple=True)
-@click.option("--template-dir")
-def command():
-
+@click.option("--solution-dir", "solution_dir", default=".")
+@click.option("--var-file","var_files", multiple=True)
+@click.option("--var", "var_values",multiple=True)
+@click.option("--template-dir", "template_dir")
+@click.option("--output", "output_dir")
+def command(solution_dir, var_files, var_values, template_dir, output_dir):
     logger.debug("Running Command Render")
-        
+
     var_file_dirs = ["sample/data"]
     output_dir = "sample/output"
     template_dir = "sample/template"
     solution = template_render.Solution(output_dir, template_dir, var_file_dirs)
     
     template_render.render(solution)
-
-
 
 
     # try:

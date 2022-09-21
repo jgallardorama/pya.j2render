@@ -10,17 +10,11 @@ from .app import log_manager
 
 @click.group()
 @click.version_option(__version__)
-@click.option("--option1", help="Help option 1")
-@click.option("--option2", type=click.Choice(["OPTION1", "OPTION2", ""]))
-@click.option("--option3", help="Help option 2")
 @click.option("-v", "--verbose", count=True, default=0)
 @click.option("-c", "--configfile", default="")
 def main_command(
     verbose: int,
     configfile: str = "",
-    option1: str = "",
-    option2: str = "",
-    option3: str = "",
 ):
     cm = ConfigManager()
     cm.verbose = verbose

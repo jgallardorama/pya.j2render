@@ -4,6 +4,10 @@ import jinja2
 from j2render.app import log_manager
 import yaml
 
+from j2render.cross.helpers import ensure_dir
+
+CONTEXT_ID="j2r_context"
+
 class Solution():
     def __init__(self, output_dir, template_dir, var_file_dirs = [], var_files = []) -> None:
         self.output_dir = output_dir
@@ -13,20 +17,28 @@ class Solution():
         self.main_template = "main.j2"
 
 
+class RenderContext():
+    def __init__(self, solution) -> None:
+        self.solution = solution
+    
+    def get_solution(self):
+        return self.solution
+
+
 logger = log_manager.get_logger(__name__)
 
-def j2r_generate(context, data, template_path, file_path):
+def j2r_generate(context: RenderContext, data, template_path, file_path):
     
-    template = create_template(context["template_dirs"], template_path)
+    solution: Solution = context.get_solution()
+    template = create_template(context, template_path)
     
     content = template.render(model = data)
     
     result = ""
     
     if file_path:
-        output_file_path = os.path.normpath(os.path.join("sample/output", file_path))
-        output_file_dir = os.path.dirname(output_file_path)
-        os.makedirs(output_file_dir, exist_ok=True)
+        output_file_path = os.path.normpath(os.path.join(solution.output_dir, file_path))
+        ensure_dir(output_file_path)
     
         with open(output_file_path, "w") as file:
             file.write(content)
@@ -35,17 +47,18 @@ def j2r_generate(context, data, template_path, file_path):
     
     return result
 
-def create_template(solution: Solution, template_path):
-    templateLoader = jinja2.FileSystemLoader(solution.template_dir)
+def create_template(context: RenderContext, template_path):
+    template_dir = context.get_solution().template_dir
+    templateLoader = jinja2.FileSystemLoader(template_dir)
     templateEnv = jinja2.Environment(loader=templateLoader)
     template = templateEnv.get_template(template_path)
     
-    func_dict = {
+    context_dict = {
         "j2r_generate": j2r_generate,
-        "j2r_solution": solution
+        "j2r_context": context
     }                
 
-    template.globals.update(func_dict)
+    template.globals.update(context_dict)
     return template
 
 
@@ -54,7 +67,6 @@ def render(solution: Solution):
     try:        
         model = {}
         data_dirs = solution.var_file_dirs
-        template_dirs = solution.template_dir
         
         for data_dir in data_dirs:
             for filename in os.listdir(data_dir):
@@ -72,11 +84,13 @@ def render(solution: Solution):
                     full_name = os.path.join(data_dir, filename)
                     with open(full_name, "r") as f:
                         lines = yaml.safe_load(f)
-                    model[fileparts[0]] = lines                    
+                    model[fileparts[0]] = lines
         
         TEMPLATE_FILE = "main.j2"
+        
+        renderContext = RenderContext(solution)
 
-        template = create_template(template_dirs, TEMPLATE_FILE)        
+        template = create_template(renderContext, TEMPLATE_FILE)        
         outputText = template.render(model = model)  # this is where to put args to the template renderer
 
         logger.info(f"Render: {outputText}")
