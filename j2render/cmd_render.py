@@ -1,13 +1,13 @@
 import os
 import click
-from .app import log_manager
+from .app import applogging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, LoggingEventHandler
 import time
 import jinja2
 from .core import template_render 
 
-logger = log_manager.get_logger(__name__)
+logger = applogging.LogManager().get_app_logger()
 
 class MyEventHandler(FileSystemEventHandler):
     def on_any_event(self, event):
@@ -23,7 +23,15 @@ class MyEventHandler(FileSystemEventHandler):
 @click.option("--var", "var_values",multiple=True)
 @click.option("--template-dir", "template_dir")
 @click.option("--output", "output_dir")
-def command(solution_dir, var_files, var_values, template_dir, output_dir):
+@click.option("--clean", "-c", "clean", default=False, is_flag=True, help="Clean output directory")
+@click.option("--watch", "-w", "watch", default=False, is_flag=True, help="Watch source folder")
+def command(solution_dir, 
+            var_files, 
+            var_values, 
+            template_dir, 
+            output_dir,
+            clean,
+            watch):
     logger.debug("Running Command Render")
 
     var_file_dirs = ["sample/data"]

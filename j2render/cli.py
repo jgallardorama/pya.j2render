@@ -5,8 +5,8 @@ import logging
 from .version import __version__
 
 from . import cmd_render
-from .app.config import ConfigManager
-from .app import log_manager
+from .app.appconfig import ConfigManager
+from .app import applogging
 
 @click.group()
 @click.version_option(__version__)
@@ -18,7 +18,7 @@ def main_command(
 ):
     cm = ConfigManager()
     cm.verbose = verbose
-    logger = log_manager.init_log(__name__)
+    logger = applogging.init_log(__name__)
     logger.info(f"verbose {verbose}")
 
     if configfile != "":

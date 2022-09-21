@@ -1,7 +1,7 @@
     
 import os
 import jinja2
-from j2render.app import log_manager
+from j2render.app import applogging
 import yaml
 
 from j2render.cross.helpers import ensure_dir
@@ -25,7 +25,7 @@ class RenderContext():
         return self.solution
 
 
-logger = log_manager.get_logger(__name__)
+logger = applogging.LogManager().get_app_logger()
 
 def j2r_generate(context: RenderContext, data, template_path, file_path):
     
@@ -79,18 +79,15 @@ def render(solution: Solution):
                         lines = f.read().splitlines()
                     model[fileparts[0]] = lines
                     
-                if extension in [".yml", ".yaml"]:
+                if extension in [".yml", ".yaml", ".json"]:
                     logger.info(f"process {filename}")
                     full_name = os.path.join(data_dir, filename)
                     with open(full_name, "r") as f:
                         lines = yaml.safe_load(f)
                     model[fileparts[0]] = lines
         
-        TEMPLATE_FILE = "main.j2"
-        
         renderContext = RenderContext(solution)
-
-        template = create_template(renderContext, TEMPLATE_FILE)        
+        template = create_template(renderContext, solution.main_template)        
         outputText = template.render(model = model)  # this is where to put args to the template renderer
 
         logger.info(f"Render: {outputText}")
