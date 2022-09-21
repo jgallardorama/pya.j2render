@@ -3,19 +3,22 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import threading
 
+from j2render.app.applogging import LogManager
+from j2render.core.template_render import Solution
 
-class BuildEventHander(FileSystemEventHandler):
 
-    def __init__(self, source_dir, output_dir) -> None:
-        self.source_dir = source_dir
-        self.output_dir = output_dir
+class RenderEventHander(FileSystemEventHandler):
+
+    def __init__(self, solution : Solution) -> None:
+        self.solution = solution
+        
         self.timer: threading.Timer = None
         self.lock = threading.Lock()
 
         super().__init__()
 
     def on_modified(self, event):
-        logger = applogging.LogManager().get_app_logger()
+        logger = LogManager().get_app_logger()
 
         logger.debug(
             f"event type: {event.event_type}  path : {event.src_path}")
@@ -27,29 +30,29 @@ class BuildEventHander(FileSystemEventHandler):
         self.timer.start()
 
     def on_scheduled_build(self):
-        logger = applogging.LogManager().get_app_logger()
+        logger = LogManager().get_app_logger()
 
         self.lock.acquire()
         try:
             logger.debug(f"on_scheduled_build")
             self.timer = None
-            watch_task(self.source_dir, self.output_dir)
+            on_watch_task(self.solution)
         finally:
             logger.debug('Released a lock')
             self.lock.release()
 
-def watch_task(source_dir, output_dir):
-    logger = applogging.LogManager().get_app_logger()
+def on_watch_task(solution: Solution):
+    logger = LogManager().get_app_logger()
 
 
-def watch_build_envs(source_dir, output_dir):
-    logger = applogging.LogManager().get_app_logger()
+def watch_solution(solution: Solution):
+    logger = LogManager().get_app_logger()
 
-    watch_task(source_dir, output_dir)
-    event_handler = BuildEventHander(source_dir, output_dir)
+    on_watch_task(solution)
+    event_handler = RenderEventHander(solution)
     observer = Observer()
-    observer.schedule(event_handler, source_dir, recursive=True)
-    logger.info(f"Watching {source_dir}")
+    observer.schedule(event_handler, solution.solution_dir, recursive=True)
+    logger.info(f"Watching {solution.solution_dir}")
     observer.start()
     try:
         while True:

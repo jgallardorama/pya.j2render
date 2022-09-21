@@ -9,16 +9,28 @@ from j2render.cross.helpers import ensure_dir
 CONTEXT_ID="j2r_context"
 
 class Solution():
-    def __init__(self, output_dir, template_dir, var_file_dirs = [], var_files = []) -> None:
+    def __init__(self, 
+                solution_dir, 
+                output_dir, 
+                template_dir, 
+                var_file_dirs = [], 
+                var_files = []) -> None:
+        self.solution_dir = solution_dir
         self.output_dir = output_dir
         self.template_dir = template_dir
         self.var_file_dirs = var_file_dirs
         self.var_files = var_files
         self.main_template = "main.j2"
 
+    def get_template_dir(self):
+        return self.template_dir
+    
+    def get_main_template(self):
+        result = self.main_template
+        return result
 
 class RenderContext():
-    def __init__(self, solution) -> None:
+    def __init__(self, solution: Solution) -> None:
         self.solution = solution
     
     def get_solution(self):
@@ -27,12 +39,12 @@ class RenderContext():
 
 logger = applogging.LogManager().get_app_logger()
 
-def j2r_generate(context: RenderContext, data, template_path, file_path):
+def j2r_generate(context: RenderContext, model, template_path, file_path):
     
     solution: Solution = context.get_solution()
     template = create_template(context, template_path)
     
-    content = template.render(model = data)
+    content = template.render(model = model)
     
     result = ""
     
@@ -48,7 +60,8 @@ def j2r_generate(context: RenderContext, data, template_path, file_path):
     return result
 
 def create_template(context: RenderContext, template_path):
-    template_dir = context.get_solution().template_dir
+    
+    template_dir = context.get_solution().get_template_dir()
     templateLoader = jinja2.FileSystemLoader(template_dir)
     templateEnv = jinja2.Environment(loader=templateLoader)
     template = templateEnv.get_template(template_path)
@@ -63,31 +76,13 @@ def create_template(context: RenderContext, template_path):
 
 
 
-def render(solution: Solution):
+def render(solution: Solution, model:dict):
     try:        
-        model = {}
-        data_dirs = solution.var_file_dirs
-        
-        for data_dir in data_dirs:
-            for filename in os.listdir(data_dir):
-                fileparts = os.path.splitext(filename)
-                extension = fileparts[1]
-                if extension == ".lst":
-                    logger.info(f"process {filename}")
-                    full_name = os.path.join(data_dir, filename)
-                    with open(full_name, "r") as f:
-                        lines = f.read().splitlines()
-                    model[fileparts[0]] = lines
-                    
-                if extension in [".yml", ".yaml", ".json"]:
-                    logger.info(f"process {filename}")
-                    full_name = os.path.join(data_dir, filename)
-                    with open(full_name, "r") as f:
-                        lines = yaml.safe_load(f)
-                    model[fileparts[0]] = lines
+
         
         renderContext = RenderContext(solution)
-        template = create_template(renderContext, solution.main_template)        
+        main_template_path = solution.get_main_template()
+        template = create_template(renderContext, main_template_path)        
         outputText = template.render(model = model)  # this is where to put args to the template renderer
 
         logger.info(f"Render: {outputText}")
