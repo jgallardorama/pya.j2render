@@ -1,4 +1,4 @@
-j2render
+j2tool
 ======
 
 
@@ -22,4 +22,4 @@ Licence
 Authors
 -------
 
-`j2render` was written by `JGR <jgr@jgr.es>`_.
+`j2tool` was written by `JGR <jgr@jgr.es>`_.

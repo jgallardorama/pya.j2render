@@ -1,5 +1,5 @@
 import os
-from j2render import cmd_render
+from j2tool import cmd_render
 import click
 import yaml
 import logging

@@ -3,9 +3,9 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import threading
 
-from j2render.app.applogging import LogManager
-from j2render.core.template_render import Solution
-from j2render.core import model_loader, template_render 
+from j2tool.app.applogging import LogManager
+from j2tool.core.template_render import Solution
+from j2tool.core import model_loader, template_render 
 
 class RenderEventHander(FileSystemEventHandler):
 

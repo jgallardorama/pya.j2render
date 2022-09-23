@@ -2,7 +2,7 @@
 
 
 import os
-from j2render.core.template_render import Solution
+from j2tool.core.template_render import Solution
 from ..app import applogging
 import yaml
 

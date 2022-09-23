@@ -1,7 +1,7 @@
 import os
 import click
 
-from j2render import watcher
+from j2tool import watcher
 from .app import applogging
 from .core import model_loader, template_render 
 

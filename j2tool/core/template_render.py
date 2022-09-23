@@ -2,10 +2,10 @@
 import json
 import os
 import jinja2
-from j2render.app import applogging
+from j2tool.app import applogging
 import yaml
 
-from j2render.cross.helpers import ensure_dir
+from j2tool.cross.helpers import ensure_dir
 
 CONTEXT_ID="j2r_context"
 

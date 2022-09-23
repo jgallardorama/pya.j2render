@@ -8,7 +8,7 @@ click = "*"
 jinja2 = "*"
 watchdog = "*"
 pyyaml = "*"
-j2render = {editable = true, path = "."}
+j2tool = {editable = true, path = "."}
 
 [dev-packages]
 autopep8 = "*"

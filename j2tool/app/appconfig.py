@@ -3,7 +3,7 @@ import os
 from typing import Any
 import yaml
 
-from j2render.cross.singleton import SingletonMeta
+from j2tool.cross.singleton import SingletonMeta
 
 class ConfigManager(metaclass=SingletonMeta):
     def __init__(self, config=None):

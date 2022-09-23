@@ -8,7 +8,7 @@ from setuptools import setup
 
 def get_version():
     version = {}
-    with open('j2render/version.py') as fp:
+    with open('j2tool/version.py') as fp:
         exec(fp.read(), version)  # pylint: disable=W0122
 
     return version['__version__']
@@ -22,7 +22,7 @@ def read(filename):
 
 
 setup(
-    name="j2render",
+    name="j2tool",
     version=get_version(),
     url="xyz_url",
     license="JGR License",
@@ -55,6 +55,6 @@ setup(
     ],
     entry_points="""
         [console_scripts]
-        j2render=j2render.cli:start
+        j2tool=j2tool.cli:start
     """,
 )

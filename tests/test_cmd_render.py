@@ -4,7 +4,7 @@
 import os
 import shutil
 import unittest
-from j2render import cli
+from j2tool import cli
 from tests.helpers import BaseTestSuite, get_runner
 
 class CmdRenderTestSuite(BaseTestSuite):

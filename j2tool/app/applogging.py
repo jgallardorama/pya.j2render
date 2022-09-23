@@ -2,8 +2,8 @@ import logging
 import sys
 from logging.handlers import TimedRotatingFileHandler
 
-from j2render.app.appconfig import ConfigManager
-from j2render.cross.singleton import SingletonMeta
+from j2tool.app.appconfig import ConfigManager
+from j2tool.cross.singleton import SingletonMeta
 
 FORMATTER = logging.Formatter(
     "%(asctime)s | %(name)s | %(levelname)s | %(message)s")

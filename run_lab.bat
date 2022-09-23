@@ -1,1 +1,1 @@
-j2render render --solution-dir lab --watch
+j2tool render --solution-dir lab --watch

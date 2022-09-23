@@ -5,8 +5,8 @@ import os
 import shutil
 import unittest
 
-from j2render.core import template_render
-from j2render.core.model_loader import load_model
+from j2tool.core import template_render
+from j2tool.core.model_loader import load_model
 
 class TestRender(unittest.TestCase):
 

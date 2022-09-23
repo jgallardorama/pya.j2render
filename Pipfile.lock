@@ -32,7 +32,7 @@
             "markers": "platform_system == 'Windows'",
             "version": "==0.4.4"
         },
-        "j2render": {
+        "j2tool": {
             "editable": true,
             "path": "."
         },
