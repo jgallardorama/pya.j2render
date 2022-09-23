@@ -1,4 +1,5 @@
     
+import json
 import os
 import jinja2
 from j2render.app import applogging
@@ -28,13 +29,26 @@ class Solution():
     def get_main_template(self):
         result = self.main_template
         return result
+    
+    def get_manifest_path(self):
+        return ".j2tool.out"
 
 class RenderContext():
     def __init__(self, solution: Solution) -> None:
         self.solution = solution
+        self.file_paths = []
     
     def get_solution(self):
         return self.solution
+    
+    def add_file(self, file_path):
+        norm_file_path = os.path.normpath(file_path)
+        
+        if not norm_file_path in self.file_paths:
+            self.file_paths.append(norm_file_path)
+            
+    def get_file_paths(self):
+        return self.file_paths
 
 
 logger = applogging.LogManager().get_app_logger()
@@ -51,6 +65,8 @@ def j2r_generate(context: RenderContext, model, template_path, file_path):
     if file_path:
         output_file_path = os.path.normpath(os.path.join(solution.output_dir, file_path))
         ensure_dir(output_file_path)
+                
+        context.add_file(output_file_path)
     
         with open(output_file_path, "w") as file:
             file.write(content)
@@ -74,16 +90,38 @@ def create_template(context: RenderContext, template_path):
     template.globals.update(context_dict)
     return template
 
+def load_manifest(manifest_path: str):
+    file_paths = []
+    if os.path.exists(manifest_path):
+        with open(manifest_path, "r") as file:
+            file_paths = json.load(file)
+    return file_paths
+
+
+def clean_files(file_paths):    
+    for file_path in file_paths:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+                    
+def save_manifest(manifest_path: str, file_paths):
+    with open(manifest_path, "w") as file:
+        json.dump(file_paths, file)
 
 
 def render(solution: Solution, model:dict):
     try:        
-
+        manifest_path = os.path.join(solution.output_dir, solution.get_manifest_path())
+        file_paths = load_manifest(manifest_path)
+        if file_paths:
+            clean_files(file_paths)
         
         renderContext = RenderContext(solution)
         main_template_path = solution.get_main_template()
         template = create_template(renderContext, main_template_path)        
         outputText = template.render(model = model)  # this is where to put args to the template renderer
+
+        save_manifest(manifest_path, renderContext.get_file_paths())
 
         logger.info(f"Render: {outputText}")
     
