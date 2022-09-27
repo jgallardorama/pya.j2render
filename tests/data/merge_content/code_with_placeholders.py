@@ -20,9 +20,9 @@ def create_new_deployrun(
     current_user: schemas.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ):
-    # ## j2t_begin_block create_new_deployrun
+    # # ## j2t_begin_block create_new_deployrun
 
-    # ## j2t_end_block create_new_deployrun
+    # # ## j2t_end_block create_new_deployrun
     pass
 
 
@@ -33,9 +33,9 @@ def update_deployrun(
     current_user: schemas.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ):
-    # ## j2t_begin_block update_deployrun
+    # # ## j2t_begin_block update_deployrun
 
-    # ## j2t_end_block update_deployrun
+    # # ## j2t_end_block update_deployrun
     pass
 
 
@@ -46,9 +46,9 @@ async def get_all_deployruns(
     limit: int = 100,
     db: Session = Depends(deps.get_db),
 ):
-    # ## j2t_begin_block get_all_deployrun
+    # # ## j2t_begin_block get_all_deployrun
     # mi codigo 123
-    # ## j2t_end_block get_all_deployrun
+    # # ## j2t_end_block get_all_deployrun
     pass
 
 
@@ -58,10 +58,10 @@ async def get_deployrun_by_id_or_name(
     current_user: schemas.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ):
-    # ## j2t_begin_block get_deployrun
+    # # ## j2t_begin_block get_deployrun
     # mi codigo 456
 
-    # ## j2t_end_block get_deployrun
+    # # ## j2t_end_block get_deployrun
     pass
 
 
@@ -71,7 +71,7 @@ async def delete_deployrun_by_id_or_name(
     current_user: schemas.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ):
-    # ## j2t_begin_block delete_deployrun
+    # # ## j2t_begin_block delete_deployrun
 
-    # ## j2t_end_block delete_deployrun
+    # # ## j2t_end_block delete_deployrun
     pass

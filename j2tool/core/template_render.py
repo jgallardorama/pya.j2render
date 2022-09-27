@@ -85,7 +85,7 @@ class RenderContext():
         if not norm_file_path in self.file_paths:
             self.file_paths.append(norm_file_path)
 
-    def get_file_paths(self):
+    def get_file_paths(self) -> list[str]:
         return self.file_paths
 
     def get_rcache(self) -> RenderCache:
@@ -95,20 +95,10 @@ class RenderContext():
 logger = applogging.LogManager().get_app_logger()
 
 
-def merge_file(renderCtx: RenderContext, content: str, output_file_path: str):
-    result_content = content
-    if os.path.exists(output_file_path):
-        with open(output_file_path, "r") as file:
-            content_1 = file.read()
-            result_content = merge_content(renderCtx, content, content_1)
-
-    return result_content
-
-
 def get_placeholder_data(content: str):
     result = {}
     # Extract all identified segments
-    regex = r"^(?P<ident>[ \t]*)# ## j2t_begin_block (?P<id>.*)\n(?P<content>(.|\n)*?)^([ \t]*)# ## j2t_end_block (?P<id2>.*)\n"
+    regex = r"^(?P<ident>[ \t]*)# # ## j2t_begin_block (?P<id>.*)\n(?P<content>(.|\n)*?)^([ \t]*)# # ## j2t_end_block (?P<id2>.*)\n"
     matches = re.finditer(regex, content, re.MULTILINE)
 
     for matchNum, match in reversed(list(enumerate(matches, start=1))):
@@ -131,9 +121,9 @@ def get_placeholder_data(content: str):
 
 
 def set_placeholder_data(content: str, data: dict):
-    result = {}
+
     # Extract all identified segments
-    regex = r"^(?P<ident>[ \t]*)# ## j2t_begin_block (?P<id>.*)\n(?P<content>(.|\n)*?)^([ \t]*)# ## j2t_end_block (?P<id2>.*)\n"
+    regex = r"^(?P<ident>[ \t]*)# # ## j2t_begin_block (?P<id>.*)\n(?P<content>(.|\n)*?)^([ \t]*)# # ## j2t_end_block (?P<id2>.*)\n"
     matches = re.finditer(regex, content, re.MULTILINE)
 
     expand_content = content
@@ -149,14 +139,14 @@ def set_placeholder_data(content: str, data: dict):
         start = match.start("content")
         end = match.end("content")
 
-        if id in result:
-            idented_content = result[id]
+        if id in data:
+            segment_code: SegmentCode = data[id]
 
-            expand_content1 = expand_content[0:start] + idented_content + \
+            expand_content1 = expand_content[0:start] + segment_code.content + \
                 "\n" + expand_content[end:len(expand_content)]
             expand_content = expand_content1
 
-    return result
+    return expand_content
 
 
 def j2r_generate(renderCxt: RenderContext, model, template_path, file_path):
@@ -173,19 +163,17 @@ def j2r_generate(renderCxt: RenderContext, model, template_path, file_path):
             os.path.join(solution.output_dir, file_path))
         ensure_dir(output_file_path)
 
-        if os.path.exists(file_path):
-            with open(file_path) as file:
+        if os.path.exists(output_file_path):
+            with open(output_file_path) as file:
                 content = file.read()
-            place_holders = get_placeholder_data(rendered_content)
-
+            place_holders = get_placeholder_data(content)
             data = renderCxt.get_rcache().update_file_data(file_path, place_holders)
+            rendered_content = set_placeholder_data(rendered_content, data)
 
         renderCxt.add_file(output_file_path)
 
-        merged_content = merge_file(renderCxt, content, output_file_path)
-
         with open(output_file_path, "w") as file:
-            file.write(merged_content)
+            file.write(rendered_content)
 
         result = output_file_path
 
@@ -208,7 +196,7 @@ def create_template(context: RenderContext, template_path):
     return template
 
 
-def load_manifest(manifest_path: str):
+def load_manifest(manifest_path: str) -> list[str]:
     file_paths = []
     if os.path.exists(manifest_path):
         with open(manifest_path, "r") as file:
@@ -216,7 +204,7 @@ def load_manifest(manifest_path: str):
     return file_paths
 
 
-def clean_files(file_paths):
+def clean_files(file_paths: list[str]):
     for file_path in file_paths:
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -231,9 +219,7 @@ def render(solution: Solution, model: dict):
     try:
         manifest_path = os.path.join(
             solution.output_dir, solution.get_manifest_path())
-        file_paths = load_manifest(manifest_path)
-        if file_paths:
-            clean_files(file_paths)
+        file_paths: list[str] = load_manifest(manifest_path)
 
         renderContext = RenderContext(solution)
         main_template_path = solution.get_main_template()
@@ -241,7 +227,12 @@ def render(solution: Solution, model: dict):
         # this is where to put args to the template renderer
         outputText = template.render(model=model)
 
-        save_manifest(manifest_path, renderContext.get_file_paths())
+        new_file_paths: list[str] = renderContext.get_file_paths()
+        save_manifest(manifest_path, new_file_paths)
+
+        if file_paths:
+            pending_file_paths = set(file_paths) - set(new_file_paths)
+            clean_files(list(pending_file_paths))
 
         logger.info(f"Render: {outputText}")
 
