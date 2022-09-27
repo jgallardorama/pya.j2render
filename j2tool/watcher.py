@@ -34,11 +34,11 @@ class RenderEventHander(FileSystemEventHandler):
 
         self.lock.acquire()
         try:
-            logger.debug(f"on_scheduled_build")
+            logger.debug(f"==============================================================\n=== on_scheduled_build")
             self.timer = None
             on_watch_task(self.solution)
         finally:
-            logger.debug('Released a lock')
+            logger.debug('=== Released a lock\n==============================================================\n')
             self.lock.release()
 
 def on_watch_task(solution: Solution):

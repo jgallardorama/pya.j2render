@@ -7,8 +7,8 @@ import logging
 from .version import __version__
 
 from . import cmd_render
-from .app.appconfig import ConfigManager
-from .app import applogging
+from j2tool.app.appconfig import ConfigManager
+from j2tool.app import applogging
 
 @click.group()
 @click.version_option(__version__)
