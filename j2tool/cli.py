@@ -1,13 +1,12 @@
 import os
-from j2tool import cmd_render
 import click
 import yaml
-import logging
 
 from .version import __version__
 
+from . import cmd_render, cmd_init
 from . import cmd_render
-from j2tool.app.appconfig import ConfigManager
+from .app.appconfig import ConfigManager
 from j2tool.app import applogging
 
 @click.group()
@@ -64,6 +63,7 @@ def main_command(
 
 
 main_command.add_command(cmd_render.command)
+main_command.add_command(cmd_init.command)
 
 def start():
     main_command()

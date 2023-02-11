@@ -7,9 +7,9 @@ import unittest
 from j2tool import cli
 from tests.helpers import BaseTestSuite, get_runner
 
-class CmdRenderTestSuite(BaseTestSuite):
+class CmdInitTestSuite(BaseTestSuite):
 
-    def test_cmd_render(self):
+    def test_cmd_init(self):
         runner = get_runner()
 
 # @click.option("--solution-dir", "solution_dir", default=".")
@@ -20,17 +20,11 @@ class CmdRenderTestSuite(BaseTestSuite):
 # @click.option("--clean", "-c", "clean", default=False, is_flag=True, help="Clean output directory")
 # @click.option("--watch", "-w", "watch", default=False, is_flag=True, help="Watch source folder")
 
-        test_data_dir = "tests/data/sample01"
-
         args = ["--no-color",
                 "-vvvv",
-                "render",
+                "init",
                 "--solution-dir",
-                "sample",
-                "--output", 
-                "output",
-                "--var-file-dir", f"{test_data_dir}/data",
-                "--template-dir", f"{test_data_dir}/templates"
+                "output/test_case_init",
                 ]
 
         result = runner.invoke(cli.main_command, args)
