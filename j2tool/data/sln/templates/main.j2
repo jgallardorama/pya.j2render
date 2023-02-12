@@ -1,0 +1,19 @@
+{% set entities = model.data1.entities -%}
+{% set entities2 = model.data2.entities -%}
+
+{% set root_path = "./" %}
+
+{% for entity in entities -%}
+    {% set entity_name = entity.name -%}
+    *** {{ entity_name }}
+
+{{ j2r_generate(j2r_context, entity, "./templ1.py.j2", root_path + "./components/" + entity_name + ".py")}}
+
+{% endfor %}
+
+
+{% for entity in entities2 -%}
+
+{{ j2r_generate(j2r_context, entity, "./templ2.py.j2", root_path + "./views/" + entity_name +  + ".py")}}
+
+{% endfor %}

@@ -1,0 +1,10 @@
+entities:
+  - name: entity01
+    attribute1: value01_1
+    attirbute2: value02_1
+  - name: entity02
+    attribute1: value01_2
+    attirbute2: value02_2
+  - name: entity03
+    attribute1: value01_3
+    attirbute2: value02_3

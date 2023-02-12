@@ -12,6 +12,9 @@ class CmdInitTestSuite(BaseTestSuite):
     def test_cmd_init(self):
         runner = get_runner()
 
+        output_dir = "output/test_case_init"
+        
+        shutil.rmtree(output_dir)
 # @click.option("--solution-dir", "solution_dir", default=".")
 # @click.option("--var-file","var_files", multiple=True)
 # @click.option("--var", "var_values",multiple=True)
@@ -24,7 +27,7 @@ class CmdInitTestSuite(BaseTestSuite):
                 "-vvvv",
                 "init",
                 "--solution-dir",
-                "output/test_case_init",
+                output_dir,
                 ]
 
         result = runner.invoke(cli.main_command, args)

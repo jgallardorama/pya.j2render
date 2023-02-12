@@ -31,7 +31,7 @@ setup(
     description="Python Boilerplate contains all the boilerplate you need to create a Python package.",
     long_description=read("README.rst"),
     packages=find_packages(exclude=("tests",)),
-    package_dir={"": "j2tool"}
+    # package_dir={"": "j2tool"},
     install_requires=[
         "Click>=7.0",
         "pyyaml>=5.0",
@@ -57,5 +57,5 @@ setup(
     entry_points="""
         [console_scripts]
         j2tool=j2tool.cli:start
-    """,
+    """
 )
