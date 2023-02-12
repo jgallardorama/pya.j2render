@@ -5,13 +5,11 @@ import yaml
 
 from j2tool.cross.singleton import SingletonMeta
 
+
 class ConfigManager(metaclass=SingletonMeta):
     def __init__(self, config=None):
         self.config_file = ""
-        self.config = {
-            "verbose": 0,
-            "no_color": False
-        }
+        self.config = {"verbose": 0, "no_color": False}
         if config:
             self.config = config
 

@@ -9,6 +9,7 @@ from . import cmd_render
 from .app.appconfig import ConfigManager
 from j2tool.app import applogging
 
+
 @click.group()
 @click.version_option(__version__)
 @click.option("-v", "--verbose", count=True, default=0)
@@ -21,9 +22,7 @@ from j2tool.app import applogging
     default=False,
     help="Disables terminal formatting sequences in the output. ",
 )
-def main_command(
-    verbose: int, no_color = True, debug = False, configfile: str = ""
-):
+def main_command(verbose: int, no_color=True, debug=False, configfile: str = ""):
     result = 0
     cm = ConfigManager()
     cm.set_config_value("verbose", verbose)
@@ -35,7 +34,6 @@ def main_command(
     logger = lm.get_app_logger()
     logger.info(f"verbose {verbose}")
     try:
-
         if configfile and os.path.isfile(configfile):
             logger.info(f"Load configuration from <{configfile}>")
             cm.load(configfile)
@@ -64,6 +62,7 @@ def main_command(
 
 main_command.add_command(cmd_render.command)
 main_command.add_command(cmd_init.command)
+
 
 def start():
     main_command()

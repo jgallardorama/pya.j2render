@@ -5,10 +5,7 @@ def convert_to_dict(obj):
     """
 
     #  Populate the dictionary with object meta data
-    obj_dict = {
-        "__class__": obj.__class__.__name__,
-        "__module__": obj.__module__
-    }
+    obj_dict = {"__class__": obj.__class__.__name__, "__module__": obj.__module__}
 
     #  Populate the dictionary with object properties
     obj_dict.update(obj.__dict__)

@@ -5,8 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 from j2tool.app.appconfig import ConfigManager
 from j2tool.cross.singleton import SingletonMeta
 
-FORMATTER = logging.Formatter(
-    "%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+FORMATTER = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 LOG_FILE = "my_app.log"
 
 TRACE = 5

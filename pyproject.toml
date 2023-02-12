@@ -1,3 +1,23 @@
+[tool.poetry]
+name = "j2tool"
+version = "0.1.1"
+description = ""
+authors = ["jgallardorama <javier.gallardo.rama@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "*"
+jinja2 = "*"
+watchdog = "*"
+pyyaml = "*"
+
+[tool.poetry.scripts]
+j2tool = "j2tool.cli:start"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta:__legacy__"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

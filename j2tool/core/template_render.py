@@ -1,31 +1,29 @@
-
 import json
 import os
 import jinja2
 from j2tool.app import applogging
 import yaml
+from typing import List
 from j2tool.cross import serialization
 
 from j2tool.cross.helpers import ensure_dir
 
 import re
+
 CONTEXT_ID = "j2r_context"
 
 
-class SegmentCode():
+class SegmentCode:
     def __init__(self, id, content, ident):
         self.id = id
         self.content = content
         self.ident = ident
 
 
-class Solution():
-    def __init__(self,
-                 solution_dir,
-                 output_dir,
-                 template_dir,
-                 var_file_dirs=[],
-                 var_files=[]) -> None:
+class Solution:
+    def __init__(
+        self, solution_dir, output_dir, template_dir, var_file_dirs=[], var_files=[]
+    ) -> None:
         self.solution_dir = solution_dir
         self.output_dir = output_dir
         self.template_dir = template_dir
@@ -44,7 +42,7 @@ class Solution():
         return ".j2tool.out"
 
 
-class RenderCache():
+class RenderCache:
     def __init__(self) -> None:
         self.cache_dir = ".j2t_cache"
 
@@ -57,23 +55,29 @@ class RenderCache():
         if os.path.exists(cache_path):
             with open(cache_path, "r") as rfile:
                 prev_data: dict = json.load(
-                    rfile, object_hook=serialization.dict_to_obj)
+                    rfile, object_hook=serialization.dict_to_obj
+                )
                 prev_data.update(data)
                 data = prev_data
         else:
             ensure_dir(cache_path)
 
         with open(cache_path, "w") as file:
-            json.dump(data, file, default=serialization.convert_to_dict,
-                      indent=4, sort_keys=True)
+            json.dump(
+                data,
+                file,
+                default=serialization.convert_to_dict,
+                indent=4,
+                sort_keys=True,
+            )
 
         return data
 
 
-class RenderContext():
+class RenderContext:
     def __init__(self, solution: Solution) -> None:
         self.solution = solution
-        self.file_paths = []
+        self.file_paths: List[str] = []
         self.rcache = RenderCache()
 
     def get_solution(self):
@@ -85,7 +89,7 @@ class RenderContext():
         if not norm_file_path in self.file_paths:
             self.file_paths.append(norm_file_path)
 
-    def get_file_paths(self) -> list[str]:
+    def get_file_paths(self) -> List[str]:
         return self.file_paths
 
     def get_rcache(self) -> RenderCache:
@@ -102,8 +106,14 @@ def get_placeholder_data(content: str):
     matches = re.finditer(regex, content, re.MULTILINE)
 
     for matchNum, match in reversed(list(enumerate(matches, start=1))):
-        logger.debug("Match {matchNum} was found at {start}-{end}: {match}".format(
-            matchNum=matchNum, start=match.start(), end=match.end(), match=match.group()))
+        logger.debug(
+            "Match {matchNum} was found at {start}-{end}: {match}".format(
+                matchNum=matchNum,
+                start=match.start(),
+                end=match.end(),
+                match=match.group(),
+            )
+        )
 
         id = match.group("id")
         ident = match.group("ident")
@@ -121,7 +131,6 @@ def get_placeholder_data(content: str):
 
 
 def set_placeholder_data(content: str, data: dict):
-
     # Extract all identified segments
     regex = r"^(?P<ident>[ \t]*)# # ## j2t_begin_block (?P<id>.*)\n(?P<content>(.|\n)*?)^([ \t]*)# # ## j2t_end_block (?P<id2>.*)\n"
     matches = re.finditer(regex, content, re.MULTILINE)
@@ -129,8 +138,14 @@ def set_placeholder_data(content: str, data: dict):
     expand_content = content
 
     for matchNum, match in reversed(list(enumerate(matches, start=1))):
-        logger.debug("Match {matchNum} was found at {start}-{end}: {match}".format(
-            matchNum=matchNum, start=match.start(), end=match.end(), match=match.group()))
+        logger.debug(
+            "Match {matchNum} was found at {start}-{end}: {match}".format(
+                matchNum=matchNum,
+                start=match.start(),
+                end=match.end(),
+                match=match.group(),
+            )
+        )
 
         id = match.group("id")
         ident = match.group("ident")
@@ -142,15 +157,18 @@ def set_placeholder_data(content: str, data: dict):
         if id in data:
             segment_code: SegmentCode = data[id]
 
-            expand_content1 = expand_content[0:start] + segment_code.content + \
-                "\n" + expand_content[end:len(expand_content)]
+            expand_content1 = (
+                expand_content[0:start]
+                + segment_code.content
+                + "\n"
+                + expand_content[end : len(expand_content)]
+            )
             expand_content = expand_content1
 
     return expand_content
 
 
 def j2r_generate(renderCxt: RenderContext, model, template_path, file_path):
-
     solution: Solution = renderCxt.get_solution()
     template = create_template(renderCxt, template_path)
 
@@ -160,7 +178,8 @@ def j2r_generate(renderCxt: RenderContext, model, template_path, file_path):
 
     if file_path:
         output_file_path = os.path.normpath(
-            os.path.join(solution.output_dir, file_path))
+            os.path.join(solution.output_dir, file_path)
+        )
         ensure_dir(output_file_path)
 
         if os.path.exists(output_file_path):
@@ -181,16 +200,12 @@ def j2r_generate(renderCxt: RenderContext, model, template_path, file_path):
 
 
 def create_template(context: RenderContext, template_path):
-
     template_dir = context.get_solution().get_template_dir()
     templateLoader = jinja2.FileSystemLoader(template_dir)
     templateEnv = jinja2.Environment(loader=templateLoader)
     template = templateEnv.get_template(template_path)
 
-    context_dict = {
-        "j2r_generate": j2r_generate,
-        "j2r_context": context
-    }
+    context_dict = {"j2r_generate": j2r_generate, "j2r_context": context}
 
     template.globals.update(context_dict)
     return template
@@ -217,8 +232,7 @@ def save_manifest(manifest_path: str, file_paths):
 
 def render(solution: Solution, model: dict):
     try:
-        manifest_path = os.path.join(
-            solution.output_dir, solution.get_manifest_path())
+        manifest_path = os.path.join(solution.output_dir, solution.get_manifest_path())
         file_paths: list[str] = load_manifest(manifest_path)
 
         renderContext = RenderContext(solution)

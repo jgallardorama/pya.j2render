@@ -5,13 +5,13 @@ import threading
 
 from j2tool.app.applogging import LogManager
 from j2tool.core.template_render import Solution
-from j2tool.core import model_loader, template_render 
+from j2tool.core import model_loader, template_render
+
 
 class RenderEventHander(FileSystemEventHandler):
-
-    def __init__(self, solution : Solution) -> None:
+    def __init__(self, solution: Solution) -> None:
         self.solution = solution
-        
+
         self.timer: threading.Timer = None
         self.lock = threading.Lock()
 
@@ -20,8 +20,7 @@ class RenderEventHander(FileSystemEventHandler):
     def on_modified(self, event):
         logger = LogManager().get_app_logger()
 
-        logger.debug(
-            f"event type: {event.event_type}  path : {event.src_path}")
+        logger.debug(f"event type: {event.event_type}  path : {event.src_path}")
         if self.timer:
             logger.debug(f"cancel event")
             self.timer.cancel()
@@ -34,17 +33,23 @@ class RenderEventHander(FileSystemEventHandler):
 
         self.lock.acquire()
         try:
-            logger.debug(f"==============================================================\n=== on_scheduled_build")
+            logger.debug(
+                f"==============================================================\n=== on_scheduled_build"
+            )
             self.timer = None
             on_watch_task(self.solution)
         finally:
-            logger.debug('=== Released a lock\n==============================================================\n')
+            logger.debug(
+                "=== Released a lock\n==============================================================\n"
+            )
             self.lock.release()
+
 
 def on_watch_task(solution: Solution):
     logger = LogManager().get_app_logger()
     model = model_loader.load_model(solution)
     template_render.render(solution, model)
+
 
 def watch_solution(solution: Solution):
     logger = LogManager().get_app_logger()
