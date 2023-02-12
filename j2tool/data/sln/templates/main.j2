@@ -13,7 +13,9 @@
 
 
 {% for entity in entities2 -%}
+    {% set entity_name = entity.name -%}
+    *** {{ entity_name }}
 
-{{ j2r_generate(j2r_context, entity, "./templ2.py.j2", root_path + "./views/" + entity_name +  + ".py")}}
+{{ j2r_generate(j2r_context, entity, "./templ2.txt.j2", root_path + "./views/" + entity_name + ".txt")}}
 
 {% endfor %}
